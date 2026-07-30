@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import VoxelMesh from './VoxelMesh';
 import { VoxelData } from '@/types/gift';
-import { RotateCcw, Sparkles, ZoomIn } from 'lucide-react';
+import { RotateCcw, Sparkles, ZoomIn, Volume2, VolumeX, Heart } from 'lucide-react';
+import { audioEngine } from '@/lib/audioEngine';
+import confetti from 'canvas-confetti';
 
 interface VoxelSceneProps {
   voxels: VoxelData[];
@@ -23,34 +25,78 @@ export default function VoxelScene({
   recipientName,
 }: VoxelSceneProps) {
   const [autoRotate, setAutoRotate] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    setIsMuted(audioEngine.getMuted());
+  }, []);
+
+  const handleToggleMute = () => {
+    const mutedState = audioEngine.toggleMute();
+    setIsMuted(mutedState);
+  };
+
+  const handleReplaySparkles = () => {
+    audioEngine.playUnwrapSound();
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#a855f7', '#ec4899', '#6366f1', '#eab308', '#ffffff'],
+    });
+  };
 
   // Determine appropriate camera distance based on maximum voxel grid extent
   const gridWidth = Math.max(...voxels.map((v) => Math.abs(v.x))) * 2 || 75;
   const initialCameraZ = Math.max(80, gridWidth * 1.5);
 
   return (
-    <div className="relative w-full h-[650px] md:h-[750px] rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-slate-900 via-indigo-950/40 to-slate-950 shadow-2xl backdrop-blur-md">
+    <div className="relative w-full h-full min-h-screen overflow-hidden bg-slate-950">
       {/* Background radial glow */}
       <div className="absolute inset-0 bg-radial from-indigo-500/10 via-transparent to-transparent opacity-70 pointer-events-none" />
 
       {/* Floating Header Banner inside Canvas area */}
-      <div className="absolute top-6 left-6 right-6 z-10 flex flex-col sm:flex-row items-center justify-between pointer-events-none">
-        <div className="bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 shadow-lg pointer-events-auto flex items-center gap-2 text-white font-medium text-sm">
-          <Sparkles className="w-4 h-4 text-purple-400 animate-pulse" />
+      <div className="absolute top-6 left-6 right-6 z-10 flex flex-col sm:flex-row items-center justify-between pointer-events-none gap-3">
+        <div className="bg-slate-900/80 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/10 shadow-lg pointer-events-auto flex items-center gap-2.5 text-white font-medium text-sm">
+          <Heart className="w-4 h-4 text-pink-400 fill-pink-400 animate-pulse" />
           <span>
-            {recipientName ? `For ${recipientName}` : '3D Voxel Gift'}
+            {recipientName ? `For ${recipientName}` : 'Special Gift'}
             {senderName ? ` from ${senderName}` : ''}
           </span>
         </div>
 
-        {/* Controls Hint */}
-        <div className="mt-2 sm:mt-0 bg-slate-900/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/5 text-xs text-slate-300 pointer-events-auto flex items-center gap-3">
-          <span className="flex items-center gap-1">
-            <RotateCcw className="w-3 h-3 text-indigo-400" /> Drag to Rotate
-          </span>
-          <span className="flex items-center gap-1">
-            <ZoomIn className="w-3 h-3 text-indigo-400" /> Pinch to Zoom
-          </span>
+        {/* Controls & Hints */}
+        <div className="flex items-center gap-2 pointer-events-auto">
+          <div className="hidden sm:flex bg-slate-900/60 backdrop-blur-md px-3 py-2 rounded-xl border border-white/5 text-xs text-slate-300 items-center gap-3">
+            <span className="flex items-center gap-1">
+              <RotateCcw className="w-3 h-3 text-indigo-400" /> Drag to Rotate
+            </span>
+            <span className="flex items-center gap-1">
+              <ZoomIn className="w-3 h-3 text-indigo-400" /> Pinch to Zoom
+            </span>
+          </div>
+
+          <button
+            onClick={handleToggleMute}
+            className={`p-2.5 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 ${
+              !isMuted
+                ? 'bg-purple-600/80 border-purple-400/50 text-white shadow-purple-500/20'
+                : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
+            }`}
+            title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
+          >
+            {!isMuted ? (
+              <>
+                <Volume2 className="w-4 h-4 text-purple-200" />
+                <span className="hidden md:inline">Audio ON</span>
+              </>
+            ) : (
+              <>
+                <VolumeX className="w-4 h-4 text-slate-400" />
+                <span className="hidden md:inline">Muted</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
@@ -86,15 +132,24 @@ export default function VoxelScene({
       {/* Footer controls inside scene */}
       <div className="absolute bottom-6 right-6 z-10 flex gap-2">
         <button
+          onClick={handleReplaySparkles}
+          className="px-3.5 py-2 rounded-xl border border-white/10 text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 transition-all shadow-md backdrop-blur-md flex items-center gap-1.5"
+          title="Replay sparkles & sound"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+          <span>Celebrate</span>
+        </button>
+
+        <button
           onClick={() => setAutoRotate(!autoRotate)}
-          className={`px-3 py-1.5 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 ${
+          className={`px-3.5 py-2 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 ${
             autoRotate
               ? 'bg-purple-600/80 border-purple-400/50 text-white shadow-purple-500/20'
               : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
           }`}
         >
-          <RotateCcw className={`w-3 h-3 ${autoRotate ? 'animate-spin' : ''}`} />
-          {autoRotate ? 'Auto-Rotate ON' : 'Auto-Rotate OFF'}
+          <RotateCcw className={`w-3.5 h-3.5 ${autoRotate ? 'animate-spin' : ''}`} />
+          <span>{autoRotate ? 'Auto-Rotate ON' : 'Auto-Rotate OFF'}</span>
         </button>
       </div>
     </div>

@@ -15,4 +15,5 @@ export interface VoxelData {
   g: number;
   b: number;
   brightness: number;
+  size?: number; // Adaptive voxel scaling for high-res subjects vs low-res backgrounds
 }

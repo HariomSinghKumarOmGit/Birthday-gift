@@ -44,11 +44,12 @@ export default function VoxelMesh({
       tempColor.setRGB(voxel.r / 255, voxel.g / 255, voxel.b / 255);
       meshRef.current?.setColorAt(index, tempColor);
 
-      // Initialize positioning
+      // Initialize positioning with adaptive target sizing
       const init = initialPositions[index];
+      const targetSize = (voxel.size || 1.0) * cubeSize * 0.01;
       tempObject.position.set(init.x, init.y, init.z);
       tempObject.rotation.set(init.rotX, init.rotY, init.rotZ);
-      tempObject.scale.set(0.01, 0.01, 0.01);
+      tempObject.scale.set(targetSize, targetSize, targetSize);
       tempObject.updateMatrix();
       meshRef.current?.setMatrixAt(index, tempObject.matrix);
     });
@@ -57,7 +58,7 @@ export default function VoxelMesh({
     if (meshRef.current.instanceColor) {
       meshRef.current.instanceColor.needsUpdate = true;
     }
-  }, [voxels, initialPositions, tempColor, tempObject]);
+  }, [voxels, initialPositions, tempColor, tempObject, cubeSize]);
 
   // Handle high-performance single GSAP tween loop to animate thousands of instances seamlessly at 60fps
   useEffect(() => {
@@ -76,6 +77,7 @@ export default function VoxelMesh({
         for (let i = 0; i < voxels.length; i++) {
           const target = voxels[i];
           const init = initialPositions[i];
+          const size = (target.size || 1.0) * cubeSize;
 
           // Calculate easing per voxel based on micro-delay
           const localP = Math.min(1, Math.max(0, (p - init.delay * 0.3) / (1 - init.delay * 0.3)));
@@ -90,11 +92,11 @@ export default function VoxelMesh({
           const curRotY = init.rotY * (1 - easeP);
           const curRotZ = init.rotZ * (1 - easeP);
 
-          const scale = easeP * 1.0;
+          const curScale = easeP * size;
 
           tempObject.position.set(curX, curY, curZ);
           tempObject.rotation.set(curRotX, curRotY, curRotZ);
-          tempObject.scale.set(scale, scale, scale);
+          tempObject.scale.set(curScale, curScale, curScale);
           tempObject.updateMatrix();
           meshRef.current.setMatrixAt(i, tempObject.matrix);
         }

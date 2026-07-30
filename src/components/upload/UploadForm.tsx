@@ -53,8 +53,8 @@ export default function UploadForm() {
     setError(null);
 
     try {
-      // 1. Client-side canvas compression & resize (~75px width max) for 60fps 3D rendering
-      const compressedBlob = await compressImageForUpload(file, 75);
+      // 1. Client-side canvas compression & resize (140px max) for crisp facial features & adaptive 3D rendering
+      const compressedBlob = await compressImageForUpload(file, 140);
       const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.png`;
       const storagePath = `gifts/${uniqueFileName}`;
 
@@ -238,7 +238,7 @@ export default function UploadForm() {
                   {file?.name} ({Math.round((file?.size || 0) / 1024)} KB)
                 </p>
                 <p className="text-xs text-slate-400">
-                  ✨ Ready for client-side compression to ~75px grid
+                  ✨ Ready for 140px adaptive saliency grid (crisp face & body detail!)
                 </p>
               </div>
             ) : (

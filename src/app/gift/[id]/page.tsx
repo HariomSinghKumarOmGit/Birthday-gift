@@ -9,7 +9,7 @@ export default function DynamicGiftPage() {
   const giftId = typeof params?.id === 'string' ? params.id : '';
 
   return (
-    <div className="w-full min-h-screen pt-4">
+    <div className="w-full h-full min-h-screen">
       <GiftViewer giftId={giftId} />
     </div>
   );
