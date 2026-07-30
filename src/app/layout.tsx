@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import AppLayout from '@/components/AppLayout';
 
@@ -10,6 +10,14 @@ export const metadata: Metadata = {
     description: 'Unwrap a special interactive 3D gift created just for you.',
     type: 'website',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#030712',
 };
 
 export default function RootLayout({

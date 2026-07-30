@@ -1,6 +1,6 @@
 import React from 'react';
 import DashboardGrid from '@/components/dashboard/DashboardGrid';
-import { LayoutGrid, Sparkles, PlusCircle } from 'lucide-react';
+import { LayoutGrid, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {

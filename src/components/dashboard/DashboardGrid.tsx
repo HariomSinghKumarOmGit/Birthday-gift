@@ -44,6 +44,7 @@ export default function DashboardGrid() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchGifts();
   }, []);
 
@@ -180,10 +181,10 @@ export default function DashboardGrid() {
             </div>
 
             {/* Footer Action Controls */}
-            <div className="p-5 pt-0 flex items-center gap-2">
+            <div className="p-4 sm:p-5 pt-0 flex items-center gap-2">
               <button
                 onClick={() => copyLink(gift.id)}
-                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl font-bold text-xs transition-all ${
+                className={`flex-1 min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl font-bold text-xs transition-all active:scale-[0.98] ${
                   copiedId === gift.id
                     ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/20'
                     : 'bg-purple-600/80 hover:bg-purple-600 text-white border border-purple-500/30'
@@ -191,12 +192,12 @@ export default function DashboardGrid() {
               >
                 {copiedId === gift.id ? (
                   <>
-                    <Check className="w-3.5 h-3.5 animate-bounce" />
+                    <Check className="w-4 h-4 animate-bounce" />
                     <span>Copied!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3.5 h-3.5" />
+                    <Copy className="w-4 h-4" />
                     <span>Copy Link</span>
                   </>
                 )}
@@ -206,7 +207,7 @@ export default function DashboardGrid() {
                 href={`/gift/${gift.id}`}
                 target="_blank"
                 title="View Gift on Live URL"
-                className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all border border-white/10 shrink-0"
+                className="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all border border-white/10 shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95"
               >
                 <ExternalLink className="w-4 h-4" />
               </Link>
@@ -214,7 +215,7 @@ export default function DashboardGrid() {
               <button
                 onClick={() => setGiftToDelete(gift)}
                 title="Delete this gift experience"
-                className="p-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 transition-all border border-rose-500/20 shrink-0"
+                className="p-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 transition-all border border-rose-500/20 shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -226,15 +227,15 @@ export default function DashboardGrid() {
       {/* Deletion Confirmation Modal */}
       {giftToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-          <div className="w-full max-w-md p-8 rounded-3xl glass-card border border-rose-500/30 shadow-2xl space-y-6 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center mx-auto text-rose-500">
-              <Trash2 className="w-8 h-8 animate-bounce" />
+          <div className="w-full max-w-md p-6 sm:p-8 rounded-3xl glass-card border border-rose-500/30 shadow-2xl space-y-5 sm:space-y-6 text-center max-h-[90vh] overflow-y-auto">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center mx-auto text-rose-500">
+              <Trash2 className="w-7 h-7 sm:w-8 sm:h-8 animate-bounce" />
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-2xl font-black text-white">Do you really want to delete this?</h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                This action will permanently delete the uploaded photo from the Supabase Storage Bucket and erase the link record from your PostgreSQL database.
+              <h3 className="text-xl sm:text-2xl font-black text-white">Delete Gift Link?</h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                This action will permanently delete the uploaded photo from Supabase Storage and remove the link record from PostgreSQL.
               </p>
             </div>
 
@@ -244,18 +245,18 @@ export default function DashboardGrid() {
               </p>
             )}
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 pt-2">
               <button
                 disabled={deleting}
                 onClick={() => setGiftToDelete(null)}
-                className="flex-1 px-4 py-3 rounded-xl font-bold text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-white/10"
+                className="flex-1 min-h-[44px] px-4 py-3 rounded-xl font-bold text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-white/10 active:scale-[0.98]"
               >
                 Cancel
               </button>
               <button
                 disabled={deleting}
                 onClick={confirmDelete}
-                className="flex-1 px-4 py-3 rounded-xl font-bold text-sm bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2"
+                className="flex-1 min-h-[44px] px-4 py-3 rounded-xl font-bold text-sm bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 active:scale-[0.98]"
               >
                 {deleting ? (
                   <>

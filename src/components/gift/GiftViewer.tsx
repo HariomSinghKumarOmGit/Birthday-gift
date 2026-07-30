@@ -138,38 +138,38 @@ export default function GiftViewer({ giftId }: GiftViewerProps) {
     <div className="w-full h-full min-h-screen bg-slate-950">
       {!isRevealed ? (
         <div className="w-full h-full min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden bg-gradient-to-b from-slate-950 via-indigo-950/60 to-slate-950">
-          <div className="relative overflow-hidden w-full max-w-lg rounded-3xl glass-card p-8 sm:p-12 border border-purple-500/30 shadow-2xl text-center flex flex-col items-center justify-center space-y-8 bg-slate-900/90 backdrop-blur-xl">
+          <div className="relative overflow-hidden w-full max-w-lg rounded-3xl glass-card p-6 sm:p-10 border border-purple-500/30 shadow-2xl text-center flex flex-col items-center justify-center space-y-6 sm:space-y-8 bg-slate-900/90 backdrop-blur-xl max-h-[92vh] overflow-y-auto">
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-pulse" />
 
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 text-xs font-bold uppercase tracking-wider">
               <Heart className="w-3.5 h-3.5 text-pink-500 fill-pink-500 animate-pulse" />
               <span>A special surprise awaits</span>
             </div>
 
             <div className="relative group cursor-pointer" onClick={handleUnwrap}>
               <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 rounded-full blur-xl opacity-70 group-hover:opacity-100 transition-opacity animate-pulse" />
-              <div className="relative w-28 h-28 rounded-3xl bg-slate-900 border-2 border-white/20 flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-2xl">
-                <GiftIcon className="w-14 h-14 text-purple-400 group-hover:text-pink-400 transition-colors animate-bounce" />
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-slate-900 border-2 border-white/20 flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-2xl">
+                <GiftIcon className="w-12 h-12 sm:w-14 sm:h-14 text-purple-400 group-hover:text-pink-400 transition-colors animate-bounce" />
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+            <div className="space-y-2 sm:space-y-3">
+              <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
                 Hello, <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">{gift.recipient_name || 'Friend'}!</span>
               </h2>
-              <p className="text-base text-slate-300">
+              <p className="text-sm sm:text-base text-slate-300">
                 <span className="font-bold text-white">{gift.sender_name || 'Someone special'}</span> has created an exclusive interactive surprise gift just for you!
               </p>
             </div>
 
             <button
               onClick={handleUnwrap}
-              className="group relative w-full sm:w-auto px-8 py-4 rounded-2xl font-black text-base text-white bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:via-pink-500 hover:to-indigo-500 shadow-2xl shadow-purple-500/40 transform hover:-translate-y-1 active:translate-y-0 transition-all duration-300 border border-white/25 flex items-center justify-center gap-3"
+              className="group relative w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-black text-sm sm:text-base text-white bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:via-pink-500 hover:to-indigo-500 shadow-2xl shadow-purple-500/40 transform hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 border border-white/25 flex items-center justify-center gap-2.5 sm:gap-3"
             >
-              <Sparkles className="w-5 h-5 animate-spin" />
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
               <span>TAP TO UNWRAP YOUR GIFT</span>
-              <Sparkles className="w-5 h-5 animate-spin" />
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
             </button>
           </div>
         </div>

@@ -4,32 +4,32 @@ import { Sparkles, ArrowRight, Boxes, ShieldCheck, Zap, Smartphone, Heart, Share
 
 export default function HomePage() {
   return (
-    <div className="space-y-20 pb-16">
+    <div className="space-y-12 sm:space-y-20 pb-12 sm:pb-16">
       {/* Hero Section */}
-      <section className="relative pt-8 pb-12 text-center max-w-5xl mx-auto space-y-8 overflow-hidden">
+      <section className="relative pt-4 sm:pt-8 pb-8 sm:pb-12 text-center max-w-5xl mx-auto space-y-6 sm:space-y-8 overflow-hidden">
         {/* Glow decoration */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[350px] bg-gradient-to-tr from-indigo-600/20 via-purple-600/20 to-pink-500/10 blur-[120px] pointer-events-none -z-10" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[200px] sm:h-[350px] bg-gradient-to-tr from-indigo-600/20 via-purple-600/20 to-pink-500/10 blur-[100px] sm:blur-[120px] pointer-events-none -z-10" />
 
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 text-purple-300 text-xs font-bold uppercase tracking-wider animate-bounce">
+        <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 text-purple-300 text-[11px] sm:text-xs font-bold uppercase tracking-wider animate-bounce">
           <Sparkles className="w-3.5 h-3.5 text-purple-400" />
           <span>Next-Generation Shareable Gifting Engine</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]">
-          Surprise Friends With <br />
+        <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.15] sm:leading-[1.1]">
+          Surprise Friends With <br className="hidden sm:inline" />
           <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Interactive 3D Voxel Portraits
           </span>
         </h1>
 
-        <p className="text-slate-300 text-lg sm:text-xl max-w-3xl mx-auto font-normal leading-relaxed">
+        <p className="text-slate-300 text-base sm:text-xl max-w-3xl mx-auto font-normal leading-relaxed px-2">
           Transform ordinary photos into mesmerizing 3D volumetric sculptures. Generate unique shareable links that unwrap with smooth GSAP animations directly on your friend&apos;s phone—no downloads needed!
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 sm:pt-4">
           <Link
             href="/upload"
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-black text-base text-white bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:via-pink-500 hover:to-indigo-500 shadow-2xl shadow-purple-500/35 hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-300 border border-white/25 flex items-center justify-center gap-3 group"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-black text-sm sm:text-base text-white bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:via-pink-500 hover:to-indigo-500 shadow-2xl shadow-purple-500/35 hover:shadow-purple-500/50 transform hover:-translate-y-1 active:scale-[0.99] transition-all duration-300 border border-white/25 flex items-center justify-center gap-2.5 sm:gap-3 group"
           >
             <Sparkles className="w-5 h-5 animate-spin" />
             <span>Create a Voxel Gift</span>
@@ -38,7 +38,7 @@ export default function HomePage() {
 
           <Link
             href="/dashboard"
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-300 border border-white/10 shadow-xl flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-bold text-sm sm:text-base bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-300 border border-white/10 shadow-xl flex items-center justify-center gap-2"
           >
             <Boxes className="w-5 h-5 text-indigo-400" />
             <span>Manage My Gifts</span>

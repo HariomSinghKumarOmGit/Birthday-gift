@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import VoxelMesh from './VoxelMesh';
@@ -26,13 +26,9 @@ export default function VoxelScene({
   recipientName,
 }: VoxelSceneProps) {
   const [autoRotate, setAutoRotate] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(() => audioEngine.getMuted());
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
-
-  useEffect(() => {
-    setIsMuted(audioEngine.getMuted());
-  }, []);
 
   const handleToggleMute = () => {
     const mutedState = audioEngine.toggleMute();
@@ -70,17 +66,17 @@ export default function VoxelScene({
       <div className="absolute inset-0 bg-radial from-indigo-500/10 via-transparent to-transparent opacity-70 pointer-events-none" />
 
       {/* Floating Header Banner inside Canvas area */}
-      <div className="absolute top-6 left-6 right-6 z-10 flex flex-col sm:flex-row items-center justify-between pointer-events-none gap-3">
-        <div className="bg-slate-900/80 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/10 shadow-lg pointer-events-auto flex items-center gap-2.5 text-white font-medium text-sm">
-          <Heart className="w-4 h-4 text-pink-400 fill-pink-400 animate-pulse" />
-          <span>
+      <div className="absolute top-3 left-3 right-3 sm:top-6 sm:left-6 sm:right-6 z-10 flex flex-row items-center justify-between pointer-events-none gap-2">
+        <div className="bg-slate-900/85 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl border border-white/10 shadow-lg pointer-events-auto flex items-center gap-2 text-white font-medium text-xs sm:text-sm truncate max-w-[65%] sm:max-w-none">
+          <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-400 fill-pink-400 animate-pulse shrink-0" />
+          <span className="truncate">
             {recipientName ? `For ${recipientName}` : 'Special Gift'}
             {senderName ? ` from ${senderName}` : ''}
           </span>
         </div>
 
         {/* Controls & Hints */}
-        <div className="flex items-center gap-2 pointer-events-auto">
+        <div className="flex items-center gap-2 pointer-events-auto shrink-0">
           <div className="hidden sm:flex bg-slate-900/60 backdrop-blur-md px-3 py-2 rounded-xl border border-white/5 text-xs text-slate-300 items-center gap-3">
             <span className="flex items-center gap-1">
               <RotateCcw className="w-3 h-3 text-indigo-400" /> Drag to Rotate
@@ -92,7 +88,7 @@ export default function VoxelScene({
 
           <button
             onClick={handleToggleMute}
-            className={`p-2.5 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 ${
+            className={`p-2.5 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 min-h-[40px] min-w-[40px] justify-center ${
               !isMuted
                 ? 'bg-purple-600/80 border-purple-400/50 text-white shadow-purple-500/20'
                 : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
@@ -120,7 +116,7 @@ export default function VoxelScene({
       {/* 3D Canvas */}
       <Canvas
         camera={{ position: [0, 0, initialCameraZ], fov: 45 }}
-        className="w-full h-full cursor-grab active:cursor-grabbing"
+        className="w-full h-full cursor-grab active:cursor-grabbing touch-none"
       >
         {/* 3-point studio lighting for cinematic portrait rendering */}
         <ambientLight intensity={0.5} />
@@ -155,10 +151,10 @@ export default function VoxelScene({
       </Canvas>
 
       {/* Footer controls inside scene */}
-      <div className="absolute bottom-6 right-6 z-10 flex gap-2">
+      <div className="absolute bottom-4 right-3 sm:bottom-6 sm:right-6 z-10 flex gap-2">
         <button
           onClick={handleReplaySparkles}
-          className="px-3.5 py-2 rounded-xl border border-white/10 text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 transition-all shadow-md backdrop-blur-md flex items-center gap-1.5"
+          className="px-3 sm:px-3.5 py-2 rounded-xl border border-white/10 text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 min-h-[38px]"
           title="Replay sparkles & sound"
         >
           <Sparkles className="w-3.5 h-3.5 text-pink-400" />
@@ -167,14 +163,15 @@ export default function VoxelScene({
 
         <button
           onClick={() => setAutoRotate(!autoRotate)}
-          className={`px-3.5 py-2 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 ${
+          className={`px-3 sm:px-3.5 py-2 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 min-h-[38px] ${
             autoRotate
               ? 'bg-purple-600/80 border-purple-400/50 text-white shadow-purple-500/20'
               : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
           }`}
         >
           <RotateCcw className={`w-3.5 h-3.5 ${autoRotate ? 'animate-spin' : ''}`} />
-          <span>{autoRotate ? 'Auto-Rotate ON' : 'Auto-Rotate OFF'}</span>
+          <span className="hidden sm:inline">{autoRotate ? 'Auto-Rotate ON' : 'Auto-Rotate OFF'}</span>
+          <span className="sm:hidden">{autoRotate ? 'Rotate ON' : 'Rotate OFF'}</span>
         </button>
       </div>
     </div>

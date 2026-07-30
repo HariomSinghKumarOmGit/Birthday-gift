@@ -189,22 +189,22 @@ export default function UploadForm() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 sm:p-10 rounded-3xl glass-card border border-white/10 shadow-2xl">
-      <form onSubmit={handleSubmit} className="space-y-8">
+    <div className="max-w-2xl mx-auto p-5 sm:p-10 rounded-3xl glass-card border border-white/10 shadow-2xl">
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
         {/* Error Alert */}
         {error && (
           <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 flex items-start gap-3 text-sm animate-fadeIn">
             <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold text-rose-200">Processing Error</p>
-              <p className="mt-1 opacity-90 leading-relaxed">{error}</p>
+              <p className="mt-1 opacity-90 leading-relaxed text-xs sm:text-sm">{error}</p>
             </div>
           </div>
         )}
 
         {/* Drag & Drop Photo Picker */}
         <div>
-          <label className="block text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">
+          <label className="block text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">
             1. Select Photo for 3D Voxel Conversion
           </label>
           
@@ -212,7 +212,7 @@ export default function UploadForm() {
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onClick={() => fileInputRef.current?.click()}
-            className="relative cursor-pointer border-2 border-dashed border-slate-700 hover:border-purple-500/60 rounded-3xl p-8 transition-all duration-300 bg-slate-900/40 hover:bg-purple-950/10 text-center group flex flex-col items-center justify-center min-h-[260px]"
+            className="relative cursor-pointer border-2 border-dashed border-slate-700 hover:border-purple-500/60 rounded-3xl p-6 sm:p-8 transition-all duration-300 bg-slate-900/40 hover:bg-purple-950/10 text-center group flex flex-col items-center justify-center min-h-[220px] sm:min-h-[260px] active:scale-[0.99]"
           >
             <input
               ref={fileInputRef}
@@ -223,35 +223,35 @@ export default function UploadForm() {
             />
 
             {previewUrl ? (
-              <div className="space-y-4 flex flex-col items-center">
-                <div className="relative w-44 h-44 rounded-2xl overflow-hidden border-2 border-purple-500 shadow-xl shadow-purple-500/20 group-hover:scale-105 transition-transform">
+              <div className="space-y-3 sm:space-y-4 flex flex-col items-center">
+                <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border-2 border-purple-500 shadow-xl shadow-purple-500/20 group-hover:scale-105 transition-transform">
                   <img
                     src={previewUrl}
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-xs font-bold text-white uppercase tracking-wider">
+                  <div className="absolute inset-0 bg-slate-950/50 opacity-100 sm:opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-xs font-bold text-white uppercase tracking-wider">
                     Change Photo
                   </div>
                 </div>
-                <p className="text-sm font-semibold text-purple-300">
+                <p className="text-xs sm:text-sm font-semibold text-purple-300">
                   {file?.name} ({Math.round((file?.size || 0) / 1024)} KB)
                 </p>
-                <p className="text-xs text-slate-400">
+                <p className="text-[11px] sm:text-xs text-slate-400 max-w-xs">
                   ✨ Ready for 200px Sobel-enhanced 5-tier adaptive sampling (ultra-crisp face & body!)
                 </p>
               </div>
             ) : (
-              <div className="space-y-4 flex flex-col items-center max-w-sm">
-                <div className="p-4 rounded-2xl bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 text-purple-400 border border-purple-500/20 group-hover:scale-110 transition-transform duration-300">
-                  <ImageIcon className="w-10 h-10" />
+              <div className="space-y-3 sm:space-y-4 flex flex-col items-center max-w-sm">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 text-purple-400 border border-purple-500/20 group-hover:scale-110 transition-transform duration-300">
+                  <ImageIcon className="w-8 h-8 sm:w-10 sm:h-10" />
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">
-                    Drag and drop your picture here
+                  <p className="text-base sm:text-lg font-bold text-slate-200 group-hover:text-white transition-colors">
+                    Tap to Choose Photo or Camera
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
-                    Or click to browse from your device. Best with portraits or high-contrast imagery!
+                    Drag and drop or tap to select from device library. Works best with portraits or high-contrast photos!
                   </p>
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function UploadForm() {
         </div>
 
         {/* Sender and Recipient Info */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
               2. Recipient Name (Optional)
@@ -270,7 +270,7 @@ export default function UploadForm() {
               placeholder="e.g. Alex"
               value={recipientName}
               onChange={(e) => setRecipientName(e.target.value)}
-              className="w-full bg-slate-900/80 border border-slate-700 focus:border-purple-500 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 text-sm focus:outline-none transition-all shadow-inner"
+              className="w-full bg-slate-900/80 border border-slate-700 focus:border-purple-500 rounded-xl px-4 py-3.5 text-slate-100 placeholder-slate-500 text-base sm:text-sm focus:outline-none transition-all shadow-inner"
             />
           </div>
 
@@ -283,7 +283,7 @@ export default function UploadForm() {
               placeholder="e.g. Sam"
               value={senderName}
               onChange={(e) => setSenderName(e.target.value)}
-              className="w-full bg-slate-900/80 border border-slate-700 focus:border-purple-500 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 text-sm focus:outline-none transition-all shadow-inner"
+              className="w-full bg-slate-900/80 border border-slate-700 focus:border-purple-500 rounded-xl px-4 py-3.5 text-slate-100 placeholder-slate-500 text-base sm:text-sm focus:outline-none transition-all shadow-inner"
             />
           </div>
         </div>
@@ -292,18 +292,18 @@ export default function UploadForm() {
         <button
           type="submit"
           disabled={loading || !file}
-          className="w-full flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-black text-base text-white bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:via-pink-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-purple-500/25 hover:shadow-purple-500/40 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 border border-white/20"
+          className="w-full min-h-[52px] flex items-center justify-center gap-2.5 sm:gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-black text-sm sm:text-base text-white bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:via-pink-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-purple-500/25 hover:shadow-purple-500/40 transform hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-300 border border-white/20"
         >
           {loading ? (
             <>
               <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin" />
-              <span>Compressing & Generating Voxel Gift...</span>
+              <span>Generating Voxel Gift...</span>
             </>
           ) : (
             <>
               <Upload className="w-5 h-5 animate-bounce" />
               <span>Generate Shareable 3D Gift Link</span>
-              <ArrowRight className="w-5 h-5 ml-1" />
+              <ArrowRight className="w-5 h-5 ml-1 hidden sm:inline" />
             </>
           )}
         </button>

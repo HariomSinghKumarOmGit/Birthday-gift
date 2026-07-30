@@ -12,6 +12,12 @@ interface VoxelMeshProps {
   cubeSize?: number;
 }
 
+// Deterministic pseudo-random number generator to ensure render purity and idempotent animations
+function pseudoRandom(seed: number): number {
+  const x = Math.sin(seed * 9301 + 49297) * 10000;
+  return x - Math.floor(x);
+}
+
 export default function VoxelMesh({
   voxels,
   isRevealed,
@@ -22,24 +28,31 @@ export default function VoxelMesh({
   const tempObject = useMemo(() => new THREE.Object3D(), []);
   const tempColor = useMemo(() => new THREE.Color(), []);
 
-  // Pre-calculate randomized starting positions for dramatic assembling effect.
+  // Pre-calculate starting positions for dramatic assembling effect.
   // Uses a spiral-outward pattern so the reveal feels like it converges inward.
   const initialPositions = useMemo(() => {
     return voxels.map((v, i) => {
       // Golden angle spiral for even distribution in 3D space
       const phi = i * 2.39996323; // golden angle ≈ 137.508°
-      const radius = 80 + Math.random() * 100;
+      const rand1 = pseudoRandom(i * 7 + 1);
+      const rand2 = pseudoRandom(i * 13 + 3);
+      const rand3 = pseudoRandom(i * 17 + 5);
+      const rand4 = pseudoRandom(i * 23 + 7);
+      const rand5 = pseudoRandom(i * 29 + 11);
+      const rand6 = pseudoRandom(i * 31 + 13);
+
+      const radius = 80 + rand1 * 100;
       const theta = Math.acos(1 - 2 * (i / Math.max(1, voxels.length)));
 
       return {
         x: v.x + radius * Math.sin(theta) * Math.cos(phi),
         y: v.y + radius * Math.sin(theta) * Math.sin(phi),
-        z: v.z + radius * Math.cos(theta) + (Math.random() - 0.5) * 60,
-        rotX: Math.random() * Math.PI * 4,
-        rotY: Math.random() * Math.PI * 4,
-        rotZ: Math.random() * Math.PI * 4,
+        z: v.z + radius * Math.cos(theta) + (rand2 - 0.5) * 60,
+        rotX: rand3 * Math.PI * 4,
+        rotY: rand4 * Math.PI * 4,
+        rotZ: rand5 * Math.PI * 4,
         // Stagger delay based on distance from center for a "wave" reveal
-        delay: Math.sqrt(v.x * v.x + v.y * v.y) / 200 + Math.random() * 0.15,
+        delay: Math.sqrt(v.x * v.x + v.y * v.y) / 200 + rand6 * 0.15,
       };
     });
   }, [voxels]);

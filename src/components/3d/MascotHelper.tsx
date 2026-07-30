@@ -67,17 +67,17 @@ function ChibiCharacter3D({ activity }: { activity: MascotActivity }) {
   const isSleeping = activity === 'sleeping';
 
   // ── Shared materials ──
-  const skinMat = useRef(new THREE.MeshStandardMaterial({ color: '#fce4cc', roughness: 0.65 }));
-  const hairMat = useRef(new THREE.MeshStandardMaterial({ color: '#7c5e48', roughness: 0.85 }));
-  const darkHairMat = useRef(new THREE.MeshStandardMaterial({ color: '#6b4f3d', roughness: 0.85 }));
-  const coatMat = useRef(new THREE.MeshStandardMaterial({ color: '#9c7b56', roughness: 0.72 }));
-  const scarfMat = useRef(new THREE.MeshStandardMaterial({ color: '#c8bda6', roughness: 0.8 }));
-  const pantsMat = useRef(new THREE.MeshStandardMaterial({ color: '#7a7a7a', roughness: 0.7 }));
-  const shoeMat = useRef(new THREE.MeshStandardMaterial({ color: '#4a3a2a', roughness: 0.6 }));
-  const eyeMat = useRef(new THREE.MeshStandardMaterial({ color: '#2d2d2d', roughness: 0.25 }));
-  const highlightMat = useRef(new THREE.MeshStandardMaterial({ color: '#ffffff', emissive: '#ffffff', emissiveIntensity: 0.5 }));
-  const cheekMat = useRef(new THREE.MeshStandardMaterial({ color: '#f8a4a4', transparent: true, opacity: 0.4, roughness: 0.9 }));
-  const buttonMat = useRef(new THREE.MeshStandardMaterial({ color: '#5a4a3a', roughness: 0.5 }));
+  const skinMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#fce4cc', roughness: 0.65 }), []);
+  const hairMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#7c5e48', roughness: 0.85 }), []);
+  const darkHairMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#6b4f3d', roughness: 0.85 }), []);
+  const coatMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#9c7b56', roughness: 0.72 }), []);
+  const scarfMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#c8bda6', roughness: 0.8 }), []);
+  const pantsMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#7a7a7a', roughness: 0.7 }), []);
+  const shoeMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#4a3a2a', roughness: 0.6 }), []);
+  const eyeMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#2d2d2d', roughness: 0.25 }), []);
+  const highlightMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffffff', emissive: '#ffffff', emissiveIntensity: 0.5 }), []);
+  const cheekMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#f8a4a4', transparent: true, opacity: 0.4, roughness: 0.9 }), []);
+  const buttonMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#5a4a3a', roughness: 0.5 }), []);
 
   // Hair spike data
   const hairSpikes: Array<{ p: [number, number, number]; r: [number, number, number]; radius: number; h: number; dark: boolean }> = [
@@ -94,18 +94,18 @@ function ChibiCharacter3D({ activity }: { activity: MascotActivity }) {
       {/* ════════ HEAD GROUP ════════ */}
       <group ref={headRef} position={[0, 0.72, 0]}>
         {/* Head sphere */}
-        <mesh material={skinMat.current}>
+        <mesh material={skinMat}>
           <sphereGeometry args={[0.42, 24, 24]} />
         </mesh>
 
         {/* Hair dome (top half) */}
-        <mesh position={[0, 0.1, -0.05]} material={hairMat.current}>
+        <mesh position={[0, 0.1, -0.05]} material={hairMat}>
           <sphereGeometry args={[0.44, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
         </mesh>
 
         {/* Hair spikes */}
         {hairSpikes.map((s, i) => (
-          <mesh key={i} position={s.p} rotation={s.r} material={s.dark ? darkHairMat.current : hairMat.current}>
+          <mesh key={i} position={s.p} rotation={s.r} material={s.dark ? darkHairMat : hairMat}>
             <coneGeometry args={[s.radius, s.h, 5]} />
           </mesh>
         ))}
@@ -116,16 +116,16 @@ function ChibiCharacter3D({ activity }: { activity: MascotActivity }) {
           [-0.04, 0.25, 0.31, true],
           [0.12, 0.22, 0.29, false],
         ] as [number, number, number, boolean][]).map(([x, y, z, dark], i) => (
-          <mesh key={`b${i}`} position={[x, y, z]} rotation={[0.7, 0, (i - 1) * 0.2]} material={dark ? darkHairMat.current : hairMat.current}>
+          <mesh key={`b${i}`} position={[x, y, z]} rotation={[0.7, 0, (i - 1) * 0.2]} material={dark ? darkHairMat : hairMat}>
             <sphereGeometry args={[0.09, 10, 10]} />
           </mesh>
         ))}
 
         {/* Ears */}
-        <mesh position={[-0.4, -0.02, 0]} material={skinMat.current}>
+        <mesh position={[-0.4, -0.02, 0]} material={skinMat}>
           <sphereGeometry args={[0.07, 10, 10]} />
         </mesh>
-        <mesh position={[0.4, -0.02, 0]} material={skinMat.current}>
+        <mesh position={[0.4, -0.02, 0]} material={skinMat}>
           <sphereGeometry args={[0.07, 10, 10]} />
         </mesh>
         {/* Inner ear pink */}
@@ -142,44 +142,44 @@ function ChibiCharacter3D({ activity }: { activity: MascotActivity }) {
         {!isSleeping ? (
           <>
             {/* Eye balls */}
-            <mesh position={[-0.14, -0.02, 0.38]} material={eyeMat.current}>
+            <mesh position={[-0.14, -0.02, 0.38]} material={eyeMat}>
               <sphereGeometry args={[0.06, 12, 12]} />
             </mesh>
-            <mesh position={[0.14, -0.02, 0.38]} material={eyeMat.current}>
+            <mesh position={[0.14, -0.02, 0.38]} material={eyeMat}>
               <sphereGeometry args={[0.06, 12, 12]} />
             </mesh>
             {/* Specular highlights */}
-            <mesh position={[-0.12, 0.005, 0.425]} material={highlightMat.current}>
+            <mesh position={[-0.12, 0.005, 0.425]} material={highlightMat}>
               <sphereGeometry args={[0.023, 6, 6]} />
             </mesh>
-            <mesh position={[0.16, 0.005, 0.425]} material={highlightMat.current}>
+            <mesh position={[0.16, 0.005, 0.425]} material={highlightMat}>
               <sphereGeometry args={[0.023, 6, 6]} />
             </mesh>
             {/* Smaller secondary highlight */}
-            <mesh position={[-0.155, -0.03, 0.42]} material={highlightMat.current}>
+            <mesh position={[-0.155, -0.03, 0.42]} material={highlightMat}>
               <sphereGeometry args={[0.012, 6, 6]} />
             </mesh>
-            <mesh position={[0.125, -0.03, 0.42]} material={highlightMat.current}>
+            <mesh position={[0.125, -0.03, 0.42]} material={highlightMat}>
               <sphereGeometry args={[0.012, 6, 6]} />
             </mesh>
           </>
         ) : (
           <>
             {/* Sleeping eyes */}
-            <mesh position={[-0.14, -0.02, 0.39]} scale={[1.6, 0.22, 0.4]} material={eyeMat.current}>
+            <mesh position={[-0.14, -0.02, 0.39]} scale={[1.6, 0.22, 0.4]} material={eyeMat}>
               <sphereGeometry args={[0.05, 8, 8]} />
             </mesh>
-            <mesh position={[0.14, -0.02, 0.39]} scale={[1.6, 0.22, 0.4]} material={eyeMat.current}>
+            <mesh position={[0.14, -0.02, 0.39]} scale={[1.6, 0.22, 0.4]} material={eyeMat}>
               <sphereGeometry args={[0.05, 8, 8]} />
             </mesh>
           </>
         )}
 
         {/* Cheek blush */}
-        <mesh position={[-0.25, -0.1, 0.3]} material={cheekMat.current}>
+        <mesh position={[-0.25, -0.1, 0.3]} material={cheekMat}>
           <sphereGeometry args={[0.075, 10, 10]} />
         </mesh>
-        <mesh position={[0.25, -0.1, 0.3]} material={cheekMat.current}>
+        <mesh position={[0.25, -0.1, 0.3]} material={cheekMat}>
           <sphereGeometry args={[0.075, 10, 10]} />
         </mesh>
 
@@ -187,18 +187,18 @@ function ChibiCharacter3D({ activity }: { activity: MascotActivity }) {
         <mesh
           position={[0, -0.15, 0.39]}
           scale={activity === 'waving' || activity === 'jumping' ? [1.4, 0.65, 0.5] : [1, 0.45, 0.5]}
-          material={eyeMat.current}
+          material={eyeMat}
         >
           <sphereGeometry args={[0.035, 8, 8]} />
         </mesh>
       </group>
 
       {/* ════════ SCARF ════════ */}
-      <mesh position={[0, 0.33, 0]} rotation={[Math.PI / 2, 0, 0]} material={scarfMat.current}>
+      <mesh position={[0, 0.33, 0]} rotation={[Math.PI / 2, 0, 0]} material={scarfMat}>
         <torusGeometry args={[0.21, 0.058, 8, 16]} />
       </mesh>
       {/* Scarf dangling tail */}
-      <mesh position={[0.15, 0.22, 0.18]} rotation={[0.3, 0, 0.15]} material={scarfMat.current}>
+      <mesh position={[0.15, 0.22, 0.18]} rotation={[0.3, 0, 0.15]} material={scarfMat}>
         <boxGeometry args={[0.07, 0.16, 0.035]} />
       </mesh>
       {/* Scarf stripe detail */}
@@ -208,7 +208,7 @@ function ChibiCharacter3D({ activity }: { activity: MascotActivity }) {
       </mesh>
 
       {/* ════════ BODY / COAT ════════ */}
-      <mesh position={[0, 0.05, 0]} material={coatMat.current}>
+      <mesh position={[0, 0.05, 0]} material={coatMat}>
         <cylinderGeometry args={[0.25, 0.29, 0.44, 16]} />
       </mesh>
       {/* Coat center seam */}
@@ -217,51 +217,51 @@ function ChibiCharacter3D({ activity }: { activity: MascotActivity }) {
         <meshStandardMaterial color="#8a6b46" roughness={0.7} transparent opacity={0.4} />
       </mesh>
       {/* Buttons */}
-      <mesh position={[0, 0.12, 0.27]} material={buttonMat.current}>
+      <mesh position={[0, 0.12, 0.27]} material={buttonMat}>
         <sphereGeometry args={[0.022, 6, 6]} />
       </mesh>
-      <mesh position={[0, 0.0, 0.29]} material={buttonMat.current}>
+      <mesh position={[0, 0.0, 0.29]} material={buttonMat}>
         <sphereGeometry args={[0.022, 6, 6]} />
       </mesh>
-      <mesh position={[0, -0.1, 0.29]} material={buttonMat.current}>
+      <mesh position={[0, -0.1, 0.29]} material={buttonMat}>
         <sphereGeometry args={[0.018, 6, 6]} />
       </mesh>
 
       {/* ════════ LEFT ARM ════════ */}
       <group position={[-0.31, 0.08, 0]} rotation={[0, 0, -0.18]}>
         {/* Upper arm */}
-        <mesh material={coatMat.current}>
+        <mesh material={coatMat}>
           <capsuleGeometry args={[0.058, 0.2, 4, 10]} />
         </mesh>
         {/* Hand */}
-        <mesh position={[0, -0.17, 0]} material={skinMat.current}>
+        <mesh position={[0, -0.17, 0]} material={skinMat}>
           <sphereGeometry args={[0.058, 10, 10]} />
         </mesh>
       </group>
 
       {/* ════════ RIGHT ARM (animated wave) ════════ */}
       <group ref={rightArmRef} position={[0.31, 0.08, 0]} rotation={[0, 0, 0.15]}>
-        <mesh material={coatMat.current}>
+        <mesh material={coatMat}>
           <capsuleGeometry args={[0.058, 0.2, 4, 10]} />
         </mesh>
-        <mesh position={[0, -0.17, 0]} material={skinMat.current}>
+        <mesh position={[0, -0.17, 0]} material={skinMat}>
           <sphereGeometry args={[0.058, 10, 10]} />
         </mesh>
       </group>
 
       {/* ════════ LEGS ════════ */}
-      <mesh position={[-0.1, -0.28, 0.04]} rotation={[0.25, 0, 0]} material={pantsMat.current}>
+      <mesh position={[-0.1, -0.28, 0.04]} rotation={[0.25, 0, 0]} material={pantsMat}>
         <capsuleGeometry args={[0.065, 0.16, 4, 10]} />
       </mesh>
-      <mesh position={[0.1, -0.28, 0.04]} rotation={[0.25, 0, 0]} material={pantsMat.current}>
+      <mesh position={[0.1, -0.28, 0.04]} rotation={[0.25, 0, 0]} material={pantsMat}>
         <capsuleGeometry args={[0.065, 0.16, 4, 10]} />
       </mesh>
 
       {/* ════════ SHOES ════════ */}
-      <mesh position={[-0.1, -0.43, 0.09]} material={shoeMat.current}>
+      <mesh position={[-0.1, -0.43, 0.09]} material={shoeMat}>
         <boxGeometry args={[0.12, 0.055, 0.15]} />
       </mesh>
-      <mesh position={[0.1, -0.43, 0.09]} material={shoeMat.current}>
+      <mesh position={[0.1, -0.43, 0.09]} material={shoeMat}>
         <boxGeometry args={[0.12, 0.055, 0.15]} />
       </mesh>
       {/* Shoe toe caps */}
@@ -337,8 +337,7 @@ export default function MascotHelper({ onResetView }: MascotHelperProps) {
 
   return (
     <div
-      className="absolute z-20 pointer-events-auto select-none"
-      style={{ top: '105px', right: '24px' }}
+      className="absolute z-20 pointer-events-auto select-none top-14 right-2 sm:top-24 sm:right-6"
     >
       <div
         className={`relative cursor-pointer group ${containerAnim}`}
@@ -350,7 +349,7 @@ export default function MascotHelper({ onResetView }: MascotHelperProps) {
         {/* Tooltip label */}
         {showTooltip && (
           <div
-            className="absolute -left-[88px] top-1/2 -translate-y-1/2 bg-slate-900/95 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg border border-white/10 shadow-lg whitespace-nowrap pointer-events-none"
+            className="absolute -left-[88px] top-1/2 -translate-y-1/2 bg-slate-900/95 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg border border-white/10 shadow-lg whitespace-nowrap pointer-events-none hidden sm:block"
             style={{ animation: 'fadeInLeft 0.2s ease-out' }}
           >
             Reset View ↻
@@ -363,10 +362,10 @@ export default function MascotHelper({ onResetView }: MascotHelperProps) {
             className="absolute -top-1 right-0 pointer-events-none"
             style={{ animation: 'zzzFloat 2s ease-in-out infinite' }}
           >
-            <span className="text-[11px] font-black text-indigo-300/80"
+            <span className="text-[10px] sm:text-[11px] font-black text-indigo-300/80"
               style={{ textShadow: '0 0 8px rgba(129,140,248,0.5)' }}>z</span>
-            <span className="text-[8px] font-black text-indigo-300/55 ml-0.5 relative -top-1.5">z</span>
-            <span className="text-[6px] font-black text-indigo-300/35 ml-0.5 relative -top-3">z</span>
+            <span className="text-[7px] sm:text-[8px] font-black text-indigo-300/55 ml-0.5 relative -top-1">z</span>
+            <span className="text-[5px] sm:text-[6px] font-black text-indigo-300/35 ml-0.5 relative -top-2">z</span>
           </div>
         )}
 
@@ -376,34 +375,36 @@ export default function MascotHelper({ onResetView }: MascotHelperProps) {
             className="absolute -top-3 left-1/2 -translate-x-1/2 pointer-events-none"
             style={{ animation: 'starSparkle 1.5s ease-in-out infinite' }}
           >
-            <span className="text-[11px]"
+            <span className="text-[10px] sm:text-[11px]"
               style={{ filter: 'drop-shadow(0 0 5px rgba(250,204,21,0.7))' }}>✦</span>
           </div>
         )}
 
         {/* ── 3D Canvas ── */}
-        <Canvas
-          camera={{ position: [0, 0, 3.2], fov: 38 }}
-          gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
-          style={{ width: 105, height: 145, pointerEvents: 'none' }}
-          dpr={[1, 2]}
-        >
-          {/* Studio lighting for the mascot */}
-          <ambientLight intensity={0.7} />
-          <directionalLight position={[3, 5, 5]} intensity={1.4} color="#fff8ee" />
-          <pointLight position={[-3, 1, 3]} intensity={0.4} color="#c4b5fd" distance={10} />
-          <pointLight position={[0, -2, 2]} intensity={0.3} color="#ffffff" distance={8} />
+        <div className="w-[75px] h-[105px] sm:w-[105px] sm:h-[145px] pointer-events-none">
+          <Canvas
+            camera={{ position: [0, 0, 3.2], fov: 38 }}
+            gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
+            style={{ width: '100%', height: '100%' }}
+            dpr={[1, 2]}
+          >
+            {/* Studio lighting for the mascot */}
+            <ambientLight intensity={0.7} />
+            <directionalLight position={[3, 5, 5]} intensity={1.4} color="#fff8ee" />
+            <pointLight position={[-3, 1, 3]} intensity={0.4} color="#c4b5fd" distance={10} />
+            <pointLight position={[0, -2, 2]} intensity={0.3} color="#ffffff" distance={8} />
 
-          <ChibiCharacter3D activity={activity} />
-        </Canvas>
+            <ChibiCharacter3D activity={activity} />
+          </Canvas>
+        </div>
 
         {/* Ground shadow glow for white cube */}
         <div
           className="mx-auto rounded-full"
           style={{
-            width: '36px',
-            height: '7px',
-            marginTop: '-8px',
+            width: '28px',
+            height: '6px',
+            marginTop: '-6px',
             background: 'radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%)',
             filter: 'blur(3px)',
           }}
