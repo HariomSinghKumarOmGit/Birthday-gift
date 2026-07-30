@@ -151,19 +151,19 @@ export default function VoxelScene({
       </Canvas>
 
       {/* Footer controls inside scene */}
-      <div className="absolute bottom-4 right-3 sm:bottom-6 sm:right-6 z-10 flex gap-2">
+      <div className="absolute bottom-4 left-3 right-3 sm:left-auto sm:right-6 z-10 flex items-center justify-between sm:justify-end gap-2 pointer-events-none">
         <button
           onClick={handleReplaySparkles}
-          className="px-3 sm:px-3.5 py-2 rounded-xl border border-white/10 text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 min-h-[38px]"
-          title="Replay sparkles & sound"
+          className="pointer-events-auto px-4 py-2.5 sm:px-3.5 sm:py-2 rounded-xl border border-pink-500/30 text-xs font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/30 transition-all flex items-center gap-1.5 min-h-[44px] sm:min-h-[38px] active:scale-95"
+          title="Replay confetti sparkles & celebratory sound"
         >
-          <Sparkles className="w-3.5 h-3.5 text-pink-400" />
-          <span>Celebrate</span>
+          <Sparkles className="w-4 h-4 text-amber-300 animate-bounce" />
+          <span>Celebrate 🎉</span>
         </button>
 
         <button
           onClick={() => setAutoRotate(!autoRotate)}
-          className={`px-3 sm:px-3.5 py-2 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 min-h-[38px] ${
+          className={`pointer-events-auto px-3.5 py-2.5 sm:py-2 rounded-xl border text-xs font-semibold tracking-wide transition-all shadow-md backdrop-blur-md flex items-center gap-1.5 min-h-[44px] sm:min-h-[38px] active:scale-95 ${
             autoRotate
               ? 'bg-purple-600/80 border-purple-400/50 text-white shadow-purple-500/20'
               : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
