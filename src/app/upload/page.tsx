@@ -30,9 +30,9 @@ export default function UploadPage() {
           <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
             <Cpu className="w-5 h-5" />
           </div>
-          <h3 className="text-sm font-bold text-white">Adaptive Saliency Compression</h3>
+          <h3 className="text-sm font-bold text-white">Sobel-Enhanced Saliency</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Photos are compressed at 140px high definition. Our intelligent algorithm prioritizes high detail on faces and bodies while simplifying background voxels!
+            Photos at 200px high definition. Our Sobel edge detector identifies eyes, lips and hair while HSL saturation analysis separates vibrant subjects from dull backgrounds.
           </p>
         </div>
 

@@ -53,8 +53,8 @@ export default function UploadForm() {
     setError(null);
 
     try {
-      // 1. Client-side canvas compression & resize (140px max) for crisp facial features & adaptive 3D rendering
-      const compressedBlob = await compressImageForUpload(file, 140);
+      // 1. Client-side canvas compression & resize (200px max) with Sobel edge detection & 5-tier adaptive sampling
+      const compressedBlob = await compressImageForUpload(file, 200);
       const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.png`;
       const storagePath = `gifts/${uniqueFileName}`;
 
@@ -238,7 +238,7 @@ export default function UploadForm() {
                   {file?.name} ({Math.round((file?.size || 0) / 1024)} KB)
                 </p>
                 <p className="text-xs text-slate-400">
-                  ✨ Ready for 140px adaptive saliency grid (crisp face & body detail!)
+                  ✨ Ready for 200px Sobel-enhanced 5-tier adaptive sampling (ultra-crisp face & body!)
                 </p>
               </div>
             ) : (

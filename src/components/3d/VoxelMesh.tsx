@@ -16,40 +16,52 @@ export default function VoxelMesh({
   voxels,
   isRevealed,
   onRevealComplete,
-  cubeSize = 0.9,
+  cubeSize = 0.88,
 }: VoxelMeshProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
   const tempColor = useMemo(() => new THREE.Color(), []);
 
-  // Pre-calculate randomized starting positions for dramatic explosive assembling effect
+  // Pre-calculate randomized starting positions for dramatic assembling effect.
+  // Uses a spiral-outward pattern so the reveal feels like it converges inward.
   const initialPositions = useMemo(() => {
-    return voxels.map((v) => ({
-      x: v.x + (Math.random() - 0.5) * 120,
-      y: v.y + (Math.random() - 0.5) * 120,
-      z: v.z + (Math.random() - 0.5) * 160,
-      rotX: Math.random() * Math.PI * 2,
-      rotY: Math.random() * Math.PI * 2,
-      rotZ: Math.random() * Math.PI * 2,
-      delay: Math.random() * 0.4, // micro staggered feel
-    }));
+    return voxels.map((v, i) => {
+      // Golden angle spiral for even distribution in 3D space
+      const phi = i * 2.39996323; // golden angle ≈ 137.508°
+      const radius = 80 + Math.random() * 100;
+      const theta = Math.acos(1 - 2 * (i / Math.max(1, voxels.length)));
+
+      return {
+        x: v.x + radius * Math.sin(theta) * Math.cos(phi),
+        y: v.y + radius * Math.sin(theta) * Math.sin(phi),
+        z: v.z + radius * Math.cos(theta) + (Math.random() - 0.5) * 60,
+        rotX: Math.random() * Math.PI * 4,
+        rotY: Math.random() * Math.PI * 4,
+        rotZ: Math.random() * Math.PI * 4,
+        // Stagger delay based on distance from center for a "wave" reveal
+        delay: Math.sqrt(v.x * v.x + v.y * v.y) / 200 + Math.random() * 0.15,
+      };
+    });
   }, [voxels]);
 
-  // Set up instance colors and initial hidden states once on mount
+  // Initialize colors and hidden start state
   useEffect(() => {
     if (!meshRef.current) return;
 
     voxels.forEach((voxel, index) => {
-      // Set RGB color per instance cube
-      tempColor.setRGB(voxel.r / 255, voxel.g / 255, voxel.b / 255);
+      // Apply sRGB-correct color with slight gamma boost for vibrancy
+      const r = Math.pow(voxel.r / 255, 0.95);
+      const g = Math.pow(voxel.g / 255, 0.95);
+      const b = Math.pow(voxel.b / 255, 0.95);
+      tempColor.setRGB(r, g, b);
       meshRef.current?.setColorAt(index, tempColor);
 
-      // Initialize positioning with adaptive target sizing
+      // Start tiny and scattered
       const init = initialPositions[index];
-      const targetSize = (voxel.size || 1.0) * cubeSize * 0.01;
+      const startScale = (voxel.size || 1.0) * cubeSize * 0.005;
       tempObject.position.set(init.x, init.y, init.z);
       tempObject.rotation.set(init.rotX, init.rotY, init.rotZ);
-      tempObject.scale.set(targetSize, targetSize, targetSize);
+      tempObject.scale.set(startScale, startScale, startScale);
       tempObject.updateMatrix();
       meshRef.current?.setMatrixAt(index, tempObject.matrix);
     });
@@ -60,39 +72,50 @@ export default function VoxelMesh({
     }
   }, [voxels, initialPositions, tempColor, tempObject, cubeSize]);
 
-  // Handle high-performance single GSAP tween loop to animate thousands of instances seamlessly at 60fps
+  // GSAP animation: single tween drives the entire InstancedMesh for 60fps
   useEffect(() => {
     if (!meshRef.current || !isRevealed) return;
 
     const progress = { value: 0 };
+    const n = voxels.length;
+
+    // Normalize delays so max delay = 1
+    const maxDelay = Math.max(...initialPositions.map(p => p.delay));
+    const normDelays = initialPositions.map(p => maxDelay > 0 ? p.delay / maxDelay : 0);
 
     gsap.to(progress, {
       value: 1,
-      duration: 2.4,
-      ease: 'expo.out',
+      duration: 3.0,
+      ease: 'power3.out',
       onUpdate: () => {
         if (!meshRef.current) return;
         const p = progress.value;
 
-        for (let i = 0; i < voxels.length; i++) {
+        for (let i = 0; i < n; i++) {
           const target = voxels[i];
           const init = initialPositions[i];
           const size = (target.size || 1.0) * cubeSize;
+          const delay = normDelays[i];
 
-          // Calculate easing per voxel based on micro-delay
-          const localP = Math.min(1, Math.max(0, (p - init.delay * 0.3) / (1 - init.delay * 0.3)));
-          // cubic ease out for individual cube snap
-          const easeP = 1 - Math.pow(1 - localP, 3);
+          // Per-voxel eased progress with stagger
+          const delayedP = Math.min(1, Math.max(0, (p - delay * 0.35) / (1 - delay * 0.35)));
+          // Quartic ease-out: fast snap then gentle settle
+          const t = delayedP;
+          const easeP = 1 - Math.pow(1 - t, 4);
 
+          // Interpolate position
           const curX = init.x + (target.x - init.x) * easeP;
           const curY = init.y + (target.y - init.y) * easeP;
           const curZ = init.z + (target.z - init.z) * easeP;
 
+          // Rotation decays to zero
           const curRotX = init.rotX * (1 - easeP);
           const curRotY = init.rotY * (1 - easeP);
           const curRotZ = init.rotZ * (1 - easeP);
 
-          const curScale = easeP * size;
+          // Scale eases in with a very subtle overshoot bounce at the end
+          const overshoot = easeP > 0.9 ? 1.0 + 0.04 * Math.sin((easeP - 0.9) * Math.PI * 10) : easeP;
+          const curScale = overshoot * size;
 
           tempObject.position.set(curX, curY, curZ);
           tempObject.rotation.set(curRotX, curRotY, curRotZ);
@@ -107,19 +130,29 @@ export default function VoxelMesh({
         if (onRevealComplete) onRevealComplete();
       },
     });
-  }, [isRevealed, voxels, initialPositions, tempObject, onRevealComplete]);
+  }, [isRevealed, voxels, initialPositions, tempObject, onRevealComplete, cubeSize]);
+
+  // Use RoundedBoxGeometry for softer, more premium look
+  const geometry = useMemo(() => {
+    const geo = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+    // Bevel the edges slightly by adjusting normals for smoother shading
+    geo.computeVertexNormals();
+    return geo;
+  }, [cubeSize]);
 
   return (
     <instancedMesh
       ref={meshRef}
-      args={[undefined, undefined, voxels.length]}
+      args={[geometry, undefined, voxels.length]}
       castShadow
       receiveShadow
     >
-      <boxGeometry args={[cubeSize, cubeSize, cubeSize]} />
-      <meshStandardMaterial
-        roughness={0.25}
-        metalness={0.15}
+      <meshPhysicalMaterial
+        roughness={0.3}
+        metalness={0.08}
+        clearcoat={0.15}
+        clearcoatRoughness={0.4}
+        envMapIntensity={0.6}
       />
     </instancedMesh>
   );

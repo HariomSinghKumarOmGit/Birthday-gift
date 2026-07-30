@@ -66,9 +66,9 @@ export default function HomePage() {
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/25 group-hover:scale-110 transition-transform">
               <Zap className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-bold text-white">Adaptive Subject Resolution</h3>
+            <h3 className="text-xl font-bold text-white">Sobel-Enhanced Upload</h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              You pick a photo on your laptop or phone. Our client-side engine uses a 140px adaptive saliency grid that renders ultra-crisp facial and body detail while optimizing background cubes!
+              You pick a photo. Our 200px engine runs a Sobel edge detector and HSL saturation analysis to build a 5-tier adaptive saliency grid: 1×1 micro-cubes on your face, 5×5 macro-blocks on the background.
             </p>
           </div>
 

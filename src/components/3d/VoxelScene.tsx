@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import VoxelMesh from './VoxelMesh';
+import MascotHelper from './MascotHelper';
 import { VoxelData } from '@/types/gift';
 import { RotateCcw, Sparkles, ZoomIn, Volume2, VolumeX, Heart } from 'lucide-react';
 import { audioEngine } from '@/lib/audioEngine';
@@ -26,6 +27,8 @@ export default function VoxelScene({
 }: VoxelSceneProps) {
   const [autoRotate, setAutoRotate] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const controlsRef = useRef<any>(null);
 
   useEffect(() => {
     setIsMuted(audioEngine.getMuted());
@@ -46,9 +49,20 @@ export default function VoxelScene({
     });
   };
 
+  // Reset camera to its original position via OrbitControls
+  const handleResetView = useCallback(() => {
+    if (controlsRef.current) {
+      controlsRef.current.reset();
+      setAutoRotate(true);
+    }
+  }, []);
+
   // Determine appropriate camera distance based on maximum voxel grid extent
-  const gridWidth = Math.max(...voxels.map((v) => Math.abs(v.x))) * 2 || 75;
-  const initialCameraZ = Math.max(80, gridWidth * 1.5);
+  const gridExtent = Math.max(
+    Math.max(...voxels.map((v) => Math.abs(v.x))),
+    Math.max(...voxels.map((v) => Math.abs(v.y)))
+  ) * 2 || 200;
+  const initialCameraZ = Math.max(120, gridExtent * 1.3);
 
   return (
     <div className="relative w-full h-full min-h-screen overflow-hidden bg-slate-950">
@@ -100,15 +114,25 @@ export default function VoxelScene({
         </div>
       </div>
 
+      {/* ── Cute Mascot Helper (reset view on click) ── */}
+      <MascotHelper onResetView={handleResetView} />
+
       {/* 3D Canvas */}
       <Canvas
         camera={{ position: [0, 0, initialCameraZ], fov: 45 }}
         className="w-full h-full cursor-grab active:cursor-grabbing"
       >
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[40, 50, 40]} intensity={1.5} />
-        <pointLight position={[-30, -30, -20]} intensity={0.6} color="#818cf8" />
-        <pointLight position={[30, -20, 30]} intensity={0.5} color="#c084fc" />
+        {/* 3-point studio lighting for cinematic portrait rendering */}
+        <ambientLight intensity={0.5} />
+        <hemisphereLight args={['#c8d5ff', '#1a1a2e', 0.6]} />
+        {/* Key light — warm, strong, upper-right */}
+        <directionalLight position={[60, 70, 50]} intensity={1.8} color="#fff5ee" />
+        {/* Fill light — cool purple from left, softer */}
+        <pointLight position={[-50, 20, -30]} intensity={0.7} color="#818cf8" distance={300} />
+        {/* Rim/back light — pink accent from behind for edge separation */}
+        <pointLight position={[20, -40, -60]} intensity={0.5} color="#f472b6" distance={250} />
+        {/* Under-fill subtle bounce */}
+        <pointLight position={[0, -60, 40]} intensity={0.3} color="#c4b5fd" distance={200} />
 
         <VoxelMesh
           voxels={voxels}
@@ -117,6 +141,7 @@ export default function VoxelScene({
         />
 
         <OrbitControls
+          ref={controlsRef}
           enableZoom={true}
           enablePan={true}
           autoRotate={autoRotate && isRevealed}

@@ -37,7 +37,8 @@ export default function GiftViewer({ giftId }: GiftViewerProps) {
 
         setGift(data as Gift);
 
-        const { voxels: extractedVoxels } = await extractVoxelDataFromImage(data.image_url, 140);
+        // 200px grid with 5-tier adaptive saliency sampling + Sobel edge detection
+        const { voxels: extractedVoxels } = await extractVoxelDataFromImage(data.image_url, 200);
 
         if (extractedVoxels.length === 0) {
           throw new Error('Could not load gift content.');
